@@ -11,7 +11,7 @@ public class Planta {
 		this.aprovacao = aprovacao;
 	}
 	private String justificativa;
-	private Projeto idProjeto;
+	private Integer idProjeto;
 	public int getId() {
 		return id;
 	}
@@ -30,10 +30,10 @@ public class Planta {
 	public void setJustificativa(String justificativa) {
 		this.justificativa = justificativa;
 	}
-	public Projeto getIdProjeto() {
+	public Integer getIdProjeto() {
 		return idProjeto;
 	}
-	public void setIdProjeto(Projeto idProjeto) {
+	public void setIdProjeto(Integer idProjeto) {
 		this.idProjeto = idProjeto;
 	}
 }

@@ -8,7 +8,8 @@ import br.com.pp.repository.entity.ArquitetoEntity;
 import br.com.pp.repository.entity.ManagerRepository;
 import br.com.pp.repository.entity.ProjetoEntity;
 
-public class ArquitetoRepository {
+public class 
+ {
 private final EntityManager entityManager;
 	
 	public ArquitetoRepository(){
@@ -19,7 +20,7 @@ private final EntityManager entityManager;
 	/**
 	 * CRIA UM NOVO REGISTRO NO BANCO DE DADOS
 	 * */
-	public void salvar(ArquitetoEntity arquitetoEntity){
+	public void cadastrar(ArquitetoEntity arquitetoEntity){
 		
 		this.entityManager.getTransaction().begin();
 		this.entityManager.persist(arquitetoEntity);
@@ -48,7 +49,7 @@ private final EntityManager entityManager;
 	/**
 	 * CONSULTA UMA PESSOA CADASTRA PELO CÓDIGO
 	 * */
-	public ArquitetoEntity getPessoa(Integer id){
+	public ArquitetoEntity getArquiteto(Integer id){
 		
 		return this.entityManager.find(ArquitetoEntity.class, id);
 	}
@@ -58,7 +59,7 @@ private final EntityManager entityManager;
 	**/
 	public void excluir(Integer id){
 		
-		ArquitetoEntity arquiteto = this.getPessoa(id);
+		ArquitetoEntity arquiteto = this.getArquiteto(id);
 		
 		this.entityManager.getTransaction().begin();
 		this.entityManager.remove(arquiteto);

@@ -10,9 +10,9 @@
       <properties>
          <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
          <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
-         <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/db_arquiteto_project"/>
-         <property name="javax.persistence.jdbc.user" value="root"/>
-         <property name="javax.persistence.jdbc.password" value=""/>
+         <property name="javax.persistence.jdbc.url" value="jdbc:mysql://amdb.clk2fcssjje2.us-west-1.rds.amazonaws.com:3306/amdb"/>
+         <property name="javax.persistence.jdbc.user" value="amdb"/>
+         <property name="javax.persistence.jdbc.password" value="amdb1234"/>
          <property name="hibernate.show_sql" value="true"/>
          <property name="hibernate.format_sql" value="true"/>
          <property name="hibernate.hbm2ddl.auto" value="update"/>

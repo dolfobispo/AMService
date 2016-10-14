@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import br.com.pp.dominio.Usuario;
 import br.com.pp.repository.entity.ArquitetoProjetoEntity;
 import br.com.pp.repository.entity.ManagerRepository;
 import br.com.pp.repository.entity.ProjetoEntity;
@@ -19,7 +20,7 @@ private final EntityManager entityManager;
 	/**
 	 * CRIA UM NOVO REGISTRO NO BANCO DE DADOS
 	 * */
-	public void salvar(ArquitetoProjetoEntity arquitetoProjetoEntity){
+	public void cadastrar(ArquitetoProjetoEntity arquitetoProjetoEntity){
 		
 		this.entityManager.getTransaction().begin();
 		this.entityManager.persist(arquitetoProjetoEntity);
@@ -40,9 +41,9 @@ private final EntityManager entityManager;
 	 * RETORNA TODAS AS PESSOAS CADASTRADAS NO BANCO DE DADOS 
 	 * */
 	@SuppressWarnings("unchecked")
-	public List<ArquitetoProjetoEntity> todosArquitetosProjetos(){
+	public List<ArquitetoProjetoEntity> todosArquitetosProjetos(Usuario usuario){
 		
-		return this.entityManager.createQuery("SELECT p FROM ArquitetoProjetosEntity p").getResultList();
+		return this.entityManager.createQuery("SELECT p FROM ArquitetoProjetosEntity p where p.id_usuario=:id").setParameter("id",usuario.getId()).getResultList();
 	}
 	
 	/**

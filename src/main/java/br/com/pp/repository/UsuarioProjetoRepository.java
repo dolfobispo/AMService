@@ -42,7 +42,7 @@ private final EntityManager entityManager;
 	@SuppressWarnings("unchecked")
 	public List<UsuarioProjetoEntity> todosUsuariosProjetos(Usuario usuario){
 		
-		return this.entityManager.createQuery("SELECT p FROM UsuarioProjetoEntity p where p.id_usuario =:id").setParameter("id",usuario.getId()).getResultList();
+		return this.entityManager.createQuery("FROM UsuarioProjetoEntity p where p.id_usuario = :id").setParameter("id",usuario.getId()).getResultList();
 	}
 	
 	/**

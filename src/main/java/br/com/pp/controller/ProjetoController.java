@@ -20,10 +20,13 @@ import br.com.pp.dominio.Pessoa;
 import br.com.pp.dominio.Planta;
 import br.com.pp.dominio.Projeto;
 import br.com.pp.dominio.Usuario;
+import br.com.pp.repository.ArquitetoProjetoRepository;
+import br.com.pp.repository.ArquitetoRepository;
 import br.com.pp.repository.PlantaRepository;
 import br.com.pp.repository.ProjetoRepository;
 import br.com.pp.repository.UsuarioProjetoRepository;
 import br.com.pp.repository.UsuarioRepository;
+import br.com.pp.repository.entity.ArquitetoProjetoEntity;
 import br.com.pp.repository.entity.PlantaEntity;
 import br.com.pp.repository.entity.ProjetoEntity;
 import br.com.pp.repository.entity.UsuarioEntity;
@@ -34,6 +37,8 @@ public class ProjetoController {
 	private final ProjetoRepository projetoRepository = new ProjetoRepository();
 	private final UsuarioProjetoRepository usuarioProjetoRepository = new UsuarioProjetoRepository();
 	private final PlantaRepository plantaRepository=new PlantaRepository();
+	private final ArquitetoRepository arquitetoRepository = new ArquitetoRepository();
+	private final ArquitetoProjetoRepository arquitetoProjetoRepository = new ArquitetoProjetoRepository();
 
 	/**
 	 * @throws Exception 
@@ -50,6 +55,7 @@ public class ProjetoController {
 		Projeto projeto=usuario.getProjetos().get(0);
 		Planta planta =usuario.getProjetos().get(0).getPlantas().get(0);
 		UsuarioProjetoEntity usuarioProjetoEntity=new UsuarioProjetoEntity();
+		ArquitetoProjetoEntity arquitetoProjetoEntity=new ArquitetoProjetoEntity();
 		ProjetoEntity projetoEntity = new ProjetoEntity();
 		//usuEntity.setId(usuario.getId());
 		projetoEntity.setNome(projeto.getNome());
@@ -60,33 +66,47 @@ public class ProjetoController {
 			
 			ProjetoEntity pjEntity= projetoRepository.cadastrar(projetoEntity);//cadastra projeto
 			if(pjEntity!=null){
+				if(arquitetoRepository.getArquiteto(usuario.getId())!=null){
+					arquitetoProjetoEntity.setIdArquiteto(usuario.getId());
+					arquitetoProjetoEntity.setIdProjeto(pjEntity.getId());
+					arquitetoProjetoRepository.cadastrar(arquitetoProjetoEntity);
+					
+				}else{
+					usuarioProjetoEntity.setIdProjeto(pjEntity.getId());
+					usuarioProjetoEntity.setIdUsuario(usuario.getId());
+					usuarioProjetoRepository.cadastrar(usuarioProjetoEntity);//cadastra o projeto e o usuario na tabela usuario_projeto
+				}
 				
-				usuarioProjetoEntity.setIdProjeto(pjEntity.getId());
-				usuarioProjetoEntity.setIdUsuario(usuario.getId());
-				usuarioProjetoRepository.cadastrar(usuarioProjetoEntity);//cadastra o projeto e o usuario na tabela usuario_projeto
-				PlantaEntity plantaEntity=new PlantaEntity();
-				plantaEntity.setAprovacao(planta.getAprovacao());
-				plantaEntity.setImagem(planta.getImagem());
-				plantaEntity.setJustificativa(planta.getJustificativa());
-				plantaEntity.setIdProjeto(pjEntity.getId());
-				PlantaEntity planEntity=plantaRepository.cadastrar(plantaEntity);//cadastra a planta 
-				List<Planta> plantaList=new ArrayList<Planta>();
-				Planta plantaRetorno=new Planta();
-				plantaRetorno.setId(planEntity.getId());
-				plantaRetorno.setIdProjeto(planta.getIdProjeto());
-				plantaRetorno.setImagem(planEntity.getImagem());
-				plantaRetorno.setJustificativa(planEntity.getJustificativa());
-				plantaList.add(plantaRetorno);
-				
-				return new Projeto(pjEntity.getId(),pjEntity.getNome(),pjEntity.getDescricao(),plantaList);//retorna o projeto completo com tudo que foi cadastrado no método.
 			}
+				if(planta!=null){
+					PlantaEntity plantaEntity=new PlantaEntity();
+					plantaEntity.setAprovacao(planta.getAprovacao());
+					plantaEntity.setImagem(planta.getImagem());
+					plantaEntity.setJustificativa(planta.getJustificativa());
+					plantaEntity.setIdProjeto(pjEntity.getId());
+					PlantaEntity planEntity=plantaRepository.cadastrar(plantaEntity);//cadastra a planta 
+					List<Planta> plantaList=new ArrayList<Planta>();
+					Planta plantaRetorno=new Planta();
+					plantaRetorno.setId(planEntity.getId());
+					plantaRetorno.setIdProjeto(planta.getIdProjeto());
+					plantaRetorno.setImagem(planEntity.getImagem());
+					plantaRetorno.setJustificativa(planEntity.getJustificativa());
+					plantaList.add(plantaRetorno);
+					return new Projeto(pjEntity.getId(),pjEntity.getNome(),pjEntity.getDescricao(),plantaList);//retorna o projeto completo com tudo que foi cadastrado no método.
+				}else{
+					return new Projeto(pjEntity.getId(),pjEntity.getNome(),pjEntity.getDescricao(),null);//retorna o projeto completo com tudo que foi cadastrado no método.
+				}
+				
+				
+				
+			
 			
 			
 		} catch (Exception e) {
 			
 			 throw new Exception("ops, um erro aconteceu.");
 		}
-		return null;
+		
 	}
 	@PUT
 	@Consumes("application/json; charset=UTF-8")
@@ -98,4 +118,6 @@ public class ProjetoController {
 		projetoEntity.setDescricao(projeto.getDescricao());
 		projetoRepository.alterar(projetoEntity);
 	}
+	
+	
 }

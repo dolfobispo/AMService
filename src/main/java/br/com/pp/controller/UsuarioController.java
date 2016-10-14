@@ -14,11 +14,19 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
 import br.com.pp.dominio.Pessoa;
+import br.com.pp.dominio.Planta;
+import br.com.pp.dominio.Projeto;
 import br.com.pp.dominio.Usuario;
 import br.com.pp.repository.PessoaRepository;
+import br.com.pp.repository.PlantaRepository;
+import br.com.pp.repository.ProjetoRepository;
+import br.com.pp.repository.UsuarioProjetoRepository;
 import br.com.pp.repository.UsuarioRepository;
 import br.com.pp.repository.entity.PessoaEntity;
+import br.com.pp.repository.entity.PlantaEntity;
+import br.com.pp.repository.entity.ProjetoEntity;
 import br.com.pp.repository.entity.UsuarioEntity;
+import br.com.pp.repository.entity.UsuarioProjetoEntity;
 
 
 /**
@@ -31,7 +39,8 @@ public class UsuarioController {
 		
 	private final  PessoaRepository repository = new PessoaRepository();
 	private final UsuarioRepository usuarioRepository = new UsuarioRepository();
-
+	private final ProjetoRepository projetoRepository= new ProjetoRepository();
+	private final PlantaRepository plantaRepository = new PlantaRepository();
 	/**
 	 * @throws Exception 
 	 * @Consumes - determina o formato dos dados que vamos postar
@@ -69,8 +78,6 @@ public class UsuarioController {
 				throw new Exception("usuario já cadastrado");
 			}
 			UsuarioEntity usuEntity=usuarioRepository.cadastrar(usuarioEntity);
-			
-			
 			return new Usuario(usuEntity.getId(), usuarioEntity.getEmail(),
 					usuarioEntity.getSenha(),p);
 			
@@ -138,19 +145,45 @@ public class UsuarioController {
 	}
 	@POST
 	@Produces("application/json; charset=UTF-8")
-	@Path("/buscarUsuario")
-	public Usuario buscarUsuario(Usuario usuario){
-		UsuarioEntity usuarioEntity = new UsuarioEntity();
+	@Path("/buscarProjetos")
+	public List<Projeto>buscarProjetos(Usuario usuario){
+	UsuarioProjetoRepository usuarioProjetoRepository = new UsuarioProjetoRepository();
+		List<UsuarioProjetoEntity> listUsuProj= usuarioProjetoRepository.todosUsuariosProjetos(usuario);
+		List<PlantaEntity> plantaRepos = plantaRepository.todasPlantas(usuario);
+		List<Projeto> projetos = new ArrayList<Projeto>();
+		for (UsuarioProjetoEntity usuarioProjetoEntity : listUsuProj) {
+			List<Planta>plantas = new ArrayList<Planta>();
+			ProjetoEntity p=projetoRepository.getProjetoById(usuarioProjetoEntity.getIdProjeto());
+			if(plantaRepos!=null){
+				for (PlantaEntity plantaEntity : plantaRepos) {
+					Planta planta = new Planta();
+					planta.setId(plantaEntity.getId());
+					planta.setIdProjeto(plantaEntity.getIdProjeto());
+					planta.setAprovacao(plantaEntity.getAprovacao());
+					planta.setImagem(plantaEntity.getImagem());
+					planta.setJustificativa(plantaEntity.getJustificativa());
+					plantas.add(planta);
+				}
+			}
+			
+			
+			Projeto projeto = new Projeto();
+			
+			
+			projeto.setId(p.getId());
+			projeto.setNome(p.getNome());
+			projeto.setDescricao(p.getDescricao());
+			
+			projeto.setPlantas(plantas);
+			
+			
+			projetos.add(projeto);
+		}
 		
-		usuarioEntity.setEmail(usuario.getEmail());
-		UsuarioEntity uEntity =usuarioRepository.getUsuario(usuarioEntity);
-		PessoaEntity pEntity= repository.getPessoaById(uEntity.getId());
-		Pessoa pessoa= new Pessoa(pEntity.getId(),pEntity.getNome(),pEntity.getSexo(),pEntity.getTelefone());
-		System.out.println(uEntity.getId());
 		
-		Usuario usu= new Usuario(uEntity.getId(),uEntity.getEmail(),uEntity.getSenha(),pessoa);
-		return usu;
+		return projetos;
 	}
+	
 	@POST
 	@Produces("application/json; charset=UTF-8")
 	@Path("/logar")
@@ -173,13 +206,19 @@ public class UsuarioController {
 	@GET
 	@Produces("application/json; charset=UTF-8")
 	@Path("/getUsuarioById/{id}")
-	public Pessoa getUsuarioById(@PathParam("id") Integer id){
+	public Usuario getUsuarioById(@PathParam("id") Integer id){
 		
-		PessoaEntity entity = repository.getPessoaById(id);
+		UsuarioEntity entity = usuarioRepository.getUsuarioById(id);
+		PessoaEntity p = repository.getPessoaById(entity.getIdPessoa());
+		Pessoa pessoa = new Pessoa();
+		pessoa.setId(p.getId());
+		pessoa.setNome(p.getNome());
+		pessoa.setSexo(p.getSexo());
+		pessoa.setTelefone(p.getTelefone());
 		
-		if(entity != null)
-			return new Pessoa(entity.getId(), entity.getNome(),entity.getSexo(),entity.getTelefone());
-		
+		if(entity != null){
+			return new Usuario(entity.getId(), entity.getEmail(),entity.getSenha(), pessoa);
+		}
 		return null;
 	}
 	

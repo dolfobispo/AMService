@@ -5,6 +5,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 
@@ -19,8 +22,10 @@ public class UsuarioEntity {
 	private String email;
 	@Column(name="senha")
 	private String senha;
-	@Column(name="id_pessoa")
-	private Integer idPessoa;
+	
+	@OneToOne(targetEntity=PessoaEntity.class)
+	@JoinColumn(name="id_pessoa")
+	private PessoaEntity pessoa;
 	public Integer getId() {
 		return id;
 	}

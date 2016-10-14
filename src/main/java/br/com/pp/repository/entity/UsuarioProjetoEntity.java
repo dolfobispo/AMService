@@ -15,8 +15,10 @@ public class UsuarioProjetoEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="id")
 	private Integer id;
+	
 	@Column(name="id_usuario")
 	private Integer idUsuario;
+	
 	@Column(name="id_projeto")
 	private Integer idProjeto;
 	public Integer getId() {

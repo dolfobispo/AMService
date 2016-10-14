@@ -15,8 +15,8 @@ public class ArquitetoProjetoEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="id")
 	private Integer id;
-	@Column(name="id_pessoa")
-	private Integer idPessoa;
+	@Column(name="id_arquiteto")
+	private Integer idArquiteto;
 	@Column(name="id_projeto")
 	private Integer idProjeto;
 	public Integer getId() {
@@ -25,11 +25,11 @@ public class ArquitetoProjetoEntity {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public Integer getIdPessoa() {
-		return idPessoa;
+	public Integer getIdArquiteto() {
+		return idArquiteto;
 	}
-	public void setIdPessoa(Integer idPessoa) {
-		this.idPessoa = idPessoa;
+	public void setIdArquiteto(Integer idArquiteto) {
+		this.idArquiteto = idArquiteto;
 	}
 	public Integer getIdProjeto() {
 		return idProjeto;

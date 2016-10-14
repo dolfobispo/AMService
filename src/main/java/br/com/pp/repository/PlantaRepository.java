@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import br.com.pp.dominio.Usuario;
 import br.com.pp.repository.entity.ManagerRepository;
 import br.com.pp.repository.entity.PlantaEntity;
 
@@ -41,9 +42,9 @@ private final EntityManager entityManager;
 	 * RETORNA TODAS AS PESSOAS CADASTRADAS NO BANCO DE DADOS 
 	 * */
 	@SuppressWarnings("unchecked")
-	public List<PlantaEntity> todasPlantas(){
+	public List<PlantaEntity> todasPlantas(Usuario usuario){
 		
-		return this.entityManager.createQuery("SELECT p FROM PlantaEntity p").getResultList();
+		return this.entityManager.createQuery("SELECT p FROM PlantaEntity p where =:id").setParameter("id",usuario.getId()).getResultList();
 	}
 	
 	/**

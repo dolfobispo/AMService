@@ -36,14 +36,6 @@ public class ProjetoRepository {
 		this.entityManager.getTransaction().commit();
 	}
 	
-	/**
-	 * RETORNA TODAS AS PESSOAS CADASTRADAS NO BANCO DE DADOS 
-	 * */
-	@SuppressWarnings("unchecked")
-	public List<ProjetoEntity> todosProjetos(){
-		
-		return this.entityManager.createQuery("SELECT p FROM UsuarioEntity p").getResultList();
-	}
 	
 	/**
 	 * CONSULTA UMA PESSOA CADASTRA PELO CÓDIGO
